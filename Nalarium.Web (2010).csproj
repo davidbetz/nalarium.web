@@ -188,7 +188,6 @@
     <Compile Include="UrlCleaner.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Migrated rules for Nalarium.Web.ruleset" />
     <None Include="Nalarium.snk" />
   </ItemGroup>
   <ItemGroup>
