@@ -1,11 +1,19 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Collections.Specialized;
+using System.Globalization;
 using System.Linq;
 using System.Web;
-//+
+using System.Web.Caching;
+using System.Web.SessionState;
+using System.Web.UI;
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -19,28 +27,20 @@ namespace Nalarium.Web
     /// </example>
     public static class Http
     {
-        public static class Info
-        {
-            public const String Alias = "__$Alias";
-            public const String TrueUrl = "TrueUrl";
-            public const String IsAliased = "IsAliased";
-            public const String ManuallyLoadedPage = "ManuallyLoadedPage";
-        }
-
         //+ field
-        private static Type _httpMethodType = typeof(HttpVerbs);
+        private static readonly Type _httpMethodType = typeof(HttpVerbs);
 
         //+
         //- ~IsPageManuallyLoaded -//
-        public static System.Web.UI.Page ManuallyLoadedPage
+        public static Page ManuallyLoadedPage
         {
             get
             {
-                return HttpData.GetScopedItem<System.Web.UI.Page>(Http.Info.Alias, Http.Info.ManuallyLoadedPage);
+                return HttpData.GetScopedItem<Page>(Info.Alias, Info.ManuallyLoadedPage);
             }
             set
             {
-                HttpData.SetScopedItem<System.Web.UI.Page>(Http.Info.Alias, Http.Info.ManuallyLoadedPage, value);
+                HttpData.SetScopedItem(Info.Alias, Info.ManuallyLoadedPage, value);
             }
         }
 
@@ -79,27 +79,27 @@ namespace Nalarium.Web
         /// <summary>
         /// Gets current active Page object
         /// </summary>
-        public static System.Web.UI.Page Page
+        public static Page Page
         {
             get
             {
-                IHttpHandler handler = Http.CurrentHandler;
-                System.Web.UI.Page page;
-                if ((page = handler as System.Web.UI.Page) != null)
+                IHttpHandler handler = CurrentHandler;
+                Page page;
+                if ((page = handler as Page) != null)
                 {
-                    return (System.Web.UI.Page)handler;
+                    return (Page)handler;
                 }
                 page = ManuallyLoadedPage;
                 if (page != null)
                 {
                     return page;
                 }
-                IHasPage handler2 = handler as IHasPage;
+                var handler2 = handler as IHasPage;
                 if (handler2 == null)
                 {
                     return null;
                 }
-                page = handler2.Page as System.Web.UI.Page;
+                page = handler2.Page;
                 if (page != null)
                 {
                     return page;
@@ -193,7 +193,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return HttpData.GetScopedItem<Boolean>(Http.Info.Alias, Http.Info.IsAliased);
+                return HttpData.GetScopedItem<Boolean>(Info.Alias, Info.IsAliased);
             }
         }
 
@@ -205,9 +205,10 @@ namespace Nalarium.Web
         {
             get
             {
-                return (RawUrlOriginalCase ?? String.Empty).ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                return (RawUrlOriginalCase ?? String.Empty).ToLower(CultureInfo.CurrentCulture);
             }
         }
+
         //- @RawUrlOriginalCase -//
         /// <summary>
         /// Gets the raw URL.
@@ -228,9 +229,10 @@ namespace Nalarium.Web
         {
             get
             {
-                return (RawPathOriginalCase ?? String.Empty).ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                return (RawPathOriginalCase ?? String.Empty).ToLower(CultureInfo.CurrentCulture);
             }
         }
+
         //- @RawUrlOriginalCase -//
         /// <summary>
         /// Gets the raw path.
@@ -251,7 +253,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return (Uri.AbsoluteUri ?? String.Empty).ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                return (Uri.AbsoluteUri ?? String.Empty).ToLower(CultureInfo.CurrentCulture);
             }
         }
 
@@ -263,7 +265,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return (Uri.AbsolutePath ?? String.Empty).ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                return (Uri.AbsolutePath ?? String.Empty).ToLower(CultureInfo.CurrentCulture);
             }
         }
 
@@ -299,7 +301,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return AbsolutePathOriginalCase.ToLower(System.Globalization.CultureInfo.CurrentCulture).Split('/').Where(p => !String.IsNullOrEmpty(p)).ToArray();
+                return AbsolutePathOriginalCase.ToLower(CultureInfo.CurrentCulture).Split('/').Where(p => !String.IsNullOrEmpty(p)).ToArray();
             }
         }
 
@@ -311,7 +313,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return ReferrerOriginalCase.ToLower(System.Globalization.CultureInfo.CurrentCulture);
+                return ReferrerOriginalCase.ToLower(CultureInfo.CurrentCulture);
             }
         }
 
@@ -353,7 +355,7 @@ namespace Nalarium.Web
         {
             get
             {
-                String root = Http.Root;
+                String root = Root;
                 Int32 colon = root.IndexOf(":", root.IndexOf("//"));
                 if (colon > -1)
                 {
@@ -372,7 +374,7 @@ namespace Nalarium.Web
         {
             get
             {
-                String root = Http.Root;
+                String root = Root;
                 Int32 doubleSlash = root.IndexOf("//");
                 Int32 colon = root.IndexOf(":", doubleSlash);
                 if (colon > -1)
@@ -394,7 +396,7 @@ namespace Nalarium.Web
         {
             get
             {
-                return Domain.ToLower(System.Globalization.CultureInfo.CurrentCulture).Split('.').Where(p => !String.IsNullOrEmpty(p)).ToArray();
+                return Domain.ToLower(CultureInfo.CurrentCulture).Split('.').Where(p => !String.IsNullOrEmpty(p)).ToArray();
             }
         }
 
@@ -418,30 +420,6 @@ namespace Nalarium.Web
 
         //+
         //- @GetSubdomainPart -//
-        /// <summary>
-        /// Gets a particular part of a subdomain.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The requested part of the subdomain.</returns>
-        public static String GetSubdomainPart(Position position)
-        {
-            return Collection.GetArrayPart<String>(DomainPartArray, position);
-        }
-        /// <summary>
-        /// Gets a particular part of a subdomain.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The requested part of the subdomain.</returns>
-        public static String GetSubdomainPart(Int32 position)
-        {
-            String[] partArray = DomainPartArray;
-            if (partArray.Length >= position)
-            {
-                return partArray[partArray.Length - position - 1];
-            }
-            //+
-            return String.Empty;
-        }
 
         //+
         //- @StatusCode -//
@@ -463,65 +441,6 @@ namespace Nalarium.Web
 
         //+
         //- @GetUrlPart -//
-        /// <summary>
-        /// Gets a particular part of a URL
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The requested part of the URL</returns>
-        public static String GetUrlPart(Position position)
-        {
-            return Collection.GetArrayPart<String>(UrlPartArray, position);
-        }
-        /// <summary>
-        /// Gets a particular part of a URL
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <returns>The requested part of the URL</returns>
-        public static String GetUrlPart(Int32 position)
-        {
-            String[] partArray = UrlPartArray;
-            if (partArray.Length >= position)
-            {
-                return partArray[partArray.Length - position - 1];
-            }
-            //+
-            return String.Empty;
-        }
-
-        //- @Redirect -//
-        /// <summary>
-        /// Redirects to the specified URL.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        public static void Redirect(String url)
-        {
-            Response.Redirect(url);
-        }
-        /// <summary>
-        /// Redirects to the specified URL.
-        /// </summary>
-        /// <param name="url">The URL.</param>
-        /// <param name="endResponse">Indicates whether execution of the current page should terminate.</param>
-        public static void Redirect(String url, Boolean endResponse)
-        {
-            Response.Redirect(url, endResponse);
-        }
-
-        //- @SetSlidingCache -//
-        /// <summary>
-        /// Sets sliding cache for a specific number of days.
-        /// </summary>
-        /// <param name="days">Number of days to set for sliding cache.</param>
-        public static void SetSlidingCache(Int32 days)
-        {
-            HttpCachePolicy cache = Response.Cache;
-            cache.SetExpires(DateTime.Now + TimeSpan.FromDays(days));
-            cache.SetMaxAge(TimeSpan.FromDays(days));
-            cache.SetCacheability(HttpCacheability.Public);
-            cache.SetValidUntilExpires(true);
-            cache.SetSlidingExpiration(true);
-            cache.SetETagFromFileDependencies();
-        }
 
         //- @AcceptedEncoding -//
         /// <summary>
@@ -636,7 +555,7 @@ namespace Nalarium.Web
         /// <summary>
         /// Gets the HTTP session object.
         /// </summary>
-        public static System.Web.SessionState.HttpSessionState Session
+        public static HttpSessionState Session
         {
             get
             {
@@ -648,7 +567,7 @@ namespace Nalarium.Web
         /// <summary>
         /// Gets the caching object.
         /// </summary>
-        public static System.Web.Caching.Cache Cache
+        public static Cache Cache
         {
             get
             {
@@ -660,12 +579,112 @@ namespace Nalarium.Web
         /// <summary>
         /// Gets the HTTP form object
         /// </summary>
-        public static System.Collections.Specialized.NameValueCollection Form
+        public static NameValueCollection Form
         {
             get
             {
                 return Request.Form;
             }
         }
+
+        /// <summary>
+        /// Gets a particular part of a subdomain.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The requested part of the subdomain.</returns>
+        public static String GetSubdomainPart(Position position)
+        {
+            return Collection.GetArrayPart(DomainPartArray, position);
+        }
+
+        /// <summary>
+        /// Gets a particular part of a subdomain.
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The requested part of the subdomain.</returns>
+        public static String GetSubdomainPart(Int32 position)
+        {
+            String[] partArray = DomainPartArray;
+            if (partArray.Length >= position)
+            {
+                return partArray[partArray.Length - position - 1];
+            }
+            //+
+            return String.Empty;
+        }
+
+        /// <summary>
+        /// Gets a particular part of a URL
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The requested part of the URL</returns>
+        public static String GetUrlPart(Position position)
+        {
+            return Collection.GetArrayPart(UrlPartArray, position);
+        }
+
+        /// <summary>
+        /// Gets a particular part of a URL
+        /// </summary>
+        /// <param name="position">The position.</param>
+        /// <returns>The requested part of the URL</returns>
+        public static String GetUrlPart(Int32 position)
+        {
+            String[] partArray = UrlPartArray;
+            if (partArray.Length >= position)
+            {
+                return partArray[partArray.Length - position - 1];
+            }
+            //+
+            return String.Empty;
+        }
+
+        //- @Redirect -//
+        /// <summary>
+        /// Redirects to the specified URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        public static void Redirect(String url)
+        {
+            Response.Redirect(url);
+        }
+
+        /// <summary>
+        /// Redirects to the specified URL.
+        /// </summary>
+        /// <param name="url">The URL.</param>
+        /// <param name="endResponse">Indicates whether execution of the current page should terminate.</param>
+        public static void Redirect(String url, Boolean endResponse)
+        {
+            Response.Redirect(url, endResponse);
+        }
+
+        //- @SetSlidingCache -//
+        /// <summary>
+        /// Sets sliding cache for a specific number of days.
+        /// </summary>
+        /// <param name="days">Number of days to set for sliding cache.</param>
+        public static void SetSlidingCache(Int32 days)
+        {
+            HttpCachePolicy cache = Response.Cache;
+            cache.SetExpires(DateTime.Now + TimeSpan.FromDays(days));
+            cache.SetMaxAge(TimeSpan.FromDays(days));
+            cache.SetCacheability(HttpCacheability.Public);
+            cache.SetValidUntilExpires(true);
+            cache.SetSlidingExpiration(true);
+            cache.SetETagFromFileDependencies();
+        }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String Alias = "__$Alias";
+            public const String TrueUrl = "TrueUrl";
+            public const String IsAliased = "IsAliased";
+            public const String ManuallyLoadedPage = "ManuallyLoadedPage";
+        }
+
+        #endregion
     }
 }

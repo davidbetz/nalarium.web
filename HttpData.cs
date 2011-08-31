@@ -1,10 +1,20 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
 using System.Web;
-//+
+using System.Web.Caching;
+using System.Web.SessionState;
+using System.Web.UI;
+using Nalarium.IO;
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -29,17 +39,18 @@ namespace Nalarium.Web
     public static class HttpData
     {
         //- @Info -//
-        public static class Info
-        {
-            public const String Capture = "Capture";
-        }
 
         //- @DataStateType -//
+
+        #region DataStateType enum
+
         public enum DataStateType
         {
             Item = 1,
             Session = 2
         }
+
+        #endregion
 
         //+
         //+ get
@@ -115,10 +126,10 @@ namespace Nalarium.Web
         /// <returns>The item value or the default value of the item type.</returns>
         public static T GetScopedItem<T>(String scope, String name)
         {
-            T t = GetItem<T>(scope + "::" + name);
+            var t = GetItem<T>(scope + "::" + name);
             if (t != null)
             {
-                return (T)t;
+                return t;
             }
             //+
             return default(T);
@@ -134,10 +145,10 @@ namespace Nalarium.Web
         /// <returns>The item value or the default value of the item type.</returns>
         public static T GetScopedCacheItem<T>(String scope, String name)
         {
-            T t = GetCacheItem<T>(scope + "::" + name);
+            var t = GetCacheItem<T>(scope + "::" + name);
             if (t != null)
             {
-                return (T)t;
+                return t;
             }
             return default(T);
         }
@@ -152,10 +163,10 @@ namespace Nalarium.Web
         /// <returns>The item value or the default value of the item type.</returns>
         public static T GetScopedSessionItem<T>(String scope, String name)
         {
-            T t = GetSessionItem<T>(scope + "::" + name);
+            var t = GetSessionItem<T>(scope + "::" + name);
             if (t != null)
             {
-                return (T)t;
+                return t;
             }
             return default(T);
         }
@@ -184,6 +195,7 @@ namespace Nalarium.Web
         {
             Http.Cache.Insert(name, item);
         }
+
         /// <summary>
         /// Set an item in the HTTP cache.
         /// </summary>
@@ -196,6 +208,7 @@ namespace Nalarium.Web
             //++ parameter 4 requires NoSlidingExpiration to be set; thus it's ignored
             Http.Cache.Insert(name, item, null, DateTime.MaxValue, slidingExpiration);
         }
+
         /// <summary>
         /// Set an item in the HTTP cache.
         /// </summary>
@@ -204,10 +217,11 @@ namespace Nalarium.Web
         /// <param name="item">The value of the item.</param>
         /// <param name="cacheDependency">The file or cache key dependencies for the item. When any dependency changes, the object becomes invalid and is removed from the cache./param>
         /// <param name="slidingExpiration">The time at which the inserted object expires and is removed from the cache.</param>
-        public static void SetCacheItem<T>(String name, T item, System.Web.Caching.CacheDependency cacheDependency, TimeSpan slidingExpiration)
+        public static void SetCacheItem<T>(String name, T item, CacheDependency cacheDependency, TimeSpan slidingExpiration)
         {
             Http.Cache.Insert(name, item, cacheDependency, DateTime.MaxValue, slidingExpiration);
         }
+
         /// <summary>
         /// Set an item in the HTTP cache.
         /// </summary>
@@ -216,7 +230,7 @@ namespace Nalarium.Web
         /// <param name="item">The value of the item.</param>
         /// <param name="cacheDependency">The file or cache key dependencies for the item. When any dependency changes, the object becomes invalid and is removed from the cache./param>
         /// <param name="onUpdateCallback">A delegate that, if provided, will be called when an object is removed from the cache. You can use this to notify applications when their objects are deleted from the cache.</param>
-        public static void SetCacheItem<T>(String name, T item, System.Web.Caching.CacheDependency cacheDependency, TimeSpan slidingExpiration, System.Web.Caching.CacheItemUpdateCallback onUpdateCallback)
+        public static void SetCacheItem<T>(String name, T item, CacheDependency cacheDependency, TimeSpan slidingExpiration, CacheItemUpdateCallback onUpdateCallback)
         {
             Http.Cache.Insert(name, item, cacheDependency, DateTime.MaxValue, slidingExpiration, onUpdateCallback);
         }
@@ -251,7 +265,7 @@ namespace Nalarium.Web
         /// <param name="item">The value of the item.</param>
         public static void SetScopedItem<T>(String scope, String name, T item)
         {
-            SetItem<T>(scope + "::" + name, item);
+            SetItem(scope + "::" + name, item);
         }
 
         //- @SetScopedCacheItem -//
@@ -264,7 +278,7 @@ namespace Nalarium.Web
         /// <param name="item">The value of the item.</param>
         public static void SetScopedCacheItem<T>(String scope, String name, T item)
         {
-            SetCacheItem<T>(scope + "::" + name, item);
+            SetCacheItem(scope + "::" + name, item);
         }
 
         //- @SetScopedSessionItem -//
@@ -277,7 +291,7 @@ namespace Nalarium.Web
         /// <param name="item">The value of the item.</param>
         public static void SetScopedSessionItem<T>(String scope, String name, T item)
         {
-            SetSessionItem<T>(scope + "::" + name, item);
+            SetSessionItem(scope + "::" + name, item);
         }
 
         //+ import
@@ -289,10 +303,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportItemMap<T>(Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetItem<T>(key, map[key]);
+                SetItem(key, map[key]);
             }
         }
 
@@ -304,10 +318,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportCacheMap<T>(Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetItem<T>(key, map[key]);
+                SetItem(key, map[key]);
             }
         }
 
@@ -319,10 +333,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportSessionMap<T>(Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetSessionItem<T>(key, map[key]);
+                SetSessionItem(key, map[key]);
             }
         }
 
@@ -341,26 +355,26 @@ namespace Nalarium.Web
             {
                 throw new InvalidOperationException(Resource.HttpData_ExportScopeInvalidUse);
             }
-            T map = new T();
+            var map = new T();
             String scopePrefix = scope + "::";
             if (stateType == DataStateType.Item)
             {
-                System.Collections.IDictionary itemStore = Http.Context.Items;
+                IDictionary itemStore = Http.Context.Items;
                 foreach (Object item in itemStore)
                 {
-                    System.Collections.DictionaryEntry dictionaryEntry = (System.Collections.DictionaryEntry)item;
+                    var dictionaryEntry = (DictionaryEntry)item;
                     String str = dictionaryEntry.Key as String ?? String.Empty;
                     if (str.StartsWith(scopePrefix, StringComparison.OrdinalIgnoreCase))
                     {
                         str = str.Substring(scopePrefix.Length, str.Length - scopePrefix.Length);
                         Object value = dictionaryEntry.Value;
-                        map.Add(str, value as String ?? value.ToString() + " [Converted]");
+                        map.Add(str, value as String ?? value + " [Converted]");
                     }
                 }
             }
             if (stateType == DataStateType.Session)
             {
-                System.Web.SessionState.HttpSessionState sessionStore = Http.Session;
+                HttpSessionState sessionStore = Http.Session;
                 foreach (String str in sessionStore)
                 {
                     String strClean = str;
@@ -368,7 +382,7 @@ namespace Nalarium.Web
                     {
                         strClean = str.Substring(scopePrefix.Length, str.Length - scopePrefix.Length);
                         Object value = sessionStore[str];
-                        map.Add(strClean, value as String ?? value.ToString() + " [Converted]");
+                        map.Add(strClean, value as String ?? value + " [Converted]");
                     }
                 }
             }
@@ -384,10 +398,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportScopedItemMap<T>(String scope, Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetScopedItem<T>(scope, key, map[key]);
+                SetScopedItem(scope, key, map[key]);
             }
         }
 
@@ -400,10 +414,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportScopedCacheMap<T>(String scope, Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetScopedItem<T>(scope, key, map[key]);
+                SetScopedItem(scope, key, map[key]);
             }
         }
 
@@ -416,10 +430,10 @@ namespace Nalarium.Web
         /// <param name="map">The map to import</param>
         public static void ImportScopedSessionMap<T>(String scope, Map<String, T> map)
         {
-            System.Collections.Generic.List<String> keyList = map.GetKeyList();
+            List<String> keyList = map.GetKeyList();
             foreach (String key in keyList)
             {
-                SetScopedSessionItem<T>(scope, key, map[key]);
+                SetScopedSessionItem(scope, key, map[key]);
             }
         }
 
@@ -442,7 +456,7 @@ namespace Nalarium.Web
         /// <value>The input content string (blank string if no content).</value>
         public static String GetInputHttpString()
         {
-            return Nalarium.IO.StreamConverter.GetStreamText(GetInputHttpStream());
+            return StreamConverter.GetStreamText(GetInputHttpStream());
         }
 
         //- @InputStream -//
@@ -450,7 +464,7 @@ namespace Nalarium.Web
         /// Gets the HTTP request stream.
         /// </summary>
         /// <value>The request stream.</value>
-        public static System.IO.Stream GetInputHttpStream()
+        public static Stream GetInputHttpStream()
         {
             return Http.Request.InputStream;
         }
@@ -462,7 +476,7 @@ namespace Nalarium.Web
         /// <value>The input content byte array (null if no content).</value>
         public static Byte[] GetInputHttpByteArray()
         {
-            return Nalarium.IO.StreamConverter.GetStreamByteArray(GetInputHttpStream());
+            return StreamConverter.GetStreamByteArray(GetInputHttpStream());
         }
 
         //+ query
@@ -476,6 +490,7 @@ namespace Nalarium.Web
         {
             return Parser.ParseString(Http.Request.QueryString[name]);
         }
+
         /// <summary>
         /// Gets the query item or, if the item is missing, the default value.
         /// </summary>
@@ -492,6 +507,7 @@ namespace Nalarium.Web
             //+
             return value;
         }
+
         //- @GetQueryItemMap -//
         /// <summary>
         /// Gets a query string information as a map
@@ -499,7 +515,7 @@ namespace Nalarium.Web
         /// <returns>Map populated with query string data.</returns>
         public static Map GetQueryItemMap()
         {
-            Map map = new Map();
+            var map = new Map();
             map.AddQueryString(Http.QueryString);
             //+
             return map;
@@ -524,6 +540,7 @@ namespace Nalarium.Web
             //+
             return String.Empty;
         }
+
         //- @SetCookie -//
         /// <summary>
         /// Sets a cookie
@@ -534,10 +551,11 @@ namespace Nalarium.Web
         {
             HttpCookieCollection cookieCollection = Http.Response.Cookies;
             //+
-            HttpCookie cookie = new HttpCookie(name, value);
+            var cookie = new HttpCookie(name, value);
             cookie.Path = "/";
             cookieCollection.Set(cookie);
         }
+
         /// <summary>
         /// Sets a cookie
         /// </summary>
@@ -548,11 +566,12 @@ namespace Nalarium.Web
         {
             HttpCookieCollection cookieCollection = Http.Response.Cookies;
             //+
-            HttpCookie cookie = new HttpCookie(name, value);
+            var cookie = new HttpCookie(name, value);
             cookie.Expires = DateTime.Now.Add(timeSpan);
             cookie.Path = "/";
             cookieCollection.Set(cookie);
         }
+
         /// <summary>
         /// Sets a cookie
         /// </summary>
@@ -563,7 +582,7 @@ namespace Nalarium.Web
         {
             HttpCookieCollection cookieCollection = Http.Response.Cookies;
             //+
-            HttpCookie cookie = new HttpCookie(name, value);
+            var cookie = new HttpCookie(name, value);
             cookie.Expires = dateTime;
             cookie.Path = "/";
             cookieCollection.Set(cookie);
@@ -580,6 +599,7 @@ namespace Nalarium.Web
         {
             return Parser.ParseString(Http.Request.ServerVariables[name]);
         }
+
         /// <summary>
         /// Gets the header item or, if the item is missing, the default value.
         /// </summary>
@@ -608,6 +628,7 @@ namespace Nalarium.Web
         {
             return Parser.ParseString(Http.Request.Headers[name]);
         }
+
         /// <summary>
         /// Gets the header item or, if the item is missing, the default value.
         /// </summary>
@@ -646,6 +667,7 @@ namespace Nalarium.Web
         {
             return GetHeaderItemMap(false, parameterArray);
         }
+
         /// <summary>
         /// Gets a series of header items as a Map.
         /// </summary>
@@ -654,7 +676,7 @@ namespace Nalarium.Web
         /// <returns></returns>
         public static Map GetHeaderItemMap(Boolean ensure, params String[] parameterArray)
         {
-            Map map = new Map();
+            var map = new Map();
             if (parameterArray != null)
             {
                 foreach (String item in parameterArray)
@@ -683,8 +705,9 @@ namespace Nalarium.Web
         /// <returns>Value of the captured item</returns>
         public static String GetCaptureItem(String name)
         {
-            return HttpData.GetScopedItem<String>(HttpData.Info.Capture, name);
+            return GetScopedItem<String>(Info.Capture, name);
         }
+
         /// <summary>
         /// Gets all items capturedd uring aliasing.
         /// </summary>
@@ -705,10 +728,10 @@ namespace Nalarium.Web
         {
             if (!String.IsNullOrEmpty(name))
             {
-                System.Web.UI.Page page = Http.Page;
+                Page page = Http.Page;
                 if (page != null)
                 {
-                    System.Web.UI.Control control = ControlFinder.FindControlRecursively(page, name);
+                    Control control = ControlFinder.FindControlRecursively(page, name);
                     if (control != null)
                     {
                         return Http.Form[control.UniqueID];
@@ -718,5 +741,14 @@ namespace Nalarium.Web
             //+
             return String.Empty;
         }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String Capture = "Capture";
+        }
+
+        #endregion
     }
 }

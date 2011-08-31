@@ -64,7 +64,7 @@
   <ItemGroup>
     <Reference Include="Nalarium, Version=3.0.0.0, Culture=neutral, PublicKeyToken=dc6429114df2bd49, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\_REFERENCE\DEBUG\Nalarium.dll</HintPath>
+      <HintPath>C:\_REFERENCE\Debug\Nalarium.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -150,9 +150,9 @@
     <Compile Include="Serialization\DataContractJsonDataSerializer.cs" />
     <Compile Include="Serialization\DataSerializer.cs" />
     <Compile Include="Serialization\SerializationMode.cs" />
-    <Compile Include="_Base\ApplicationProcessorBase.cs" />
-    <Compile Include="_Base\GlobalApplicationProcessorBase.cs" />
-    <Compile Include="_Base\SessionApplicationProcessorBase.cs" />
+    <Compile Include="_Base\ApplicationInitializer.cs" />
+    <Compile Include="_Base\GlobalApplicationInitializer.cs" />
+    <Compile Include="_Base\SessionApplicationInitializer.cs" />
     <Compile Include="StateEntryType.cs" />
     <Compile Include="StateEntry.cs" />
     <Compile Include="HttpVerbs.cs" />

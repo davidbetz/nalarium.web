@@ -1,9 +1,12 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+
 namespace Nalarium.Web
 {
     //- @Header -//
@@ -13,6 +16,9 @@ namespace Nalarium.Web
     public static class HttpHeader
     {
         //- @Request -//
+
+        #region Nested type: Request
+
         /// <summary>
         /// Common request header names.
         /// </summary>
@@ -34,7 +40,12 @@ namespace Nalarium.Web
             public const String UserAgent = "user-agent";
         }
 
+        #endregion
+
         //- @Response -//
+
+        #region Nested type: Response
+
         /// <summary>
         /// Common response header names.
         /// </summary>
@@ -60,5 +71,7 @@ namespace Nalarium.Web
             public const String Server = "server";
             public const String SetCookie = "set-cookie";
         }
+
+        #endregion
     }
 }

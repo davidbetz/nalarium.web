@@ -1,10 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 //+
+using System.Collections.Generic;
 using Nalarium.Reflection;
-//+
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -15,12 +19,12 @@ namespace Nalarium.Web
         //- Process -//
         public override sealed void Process()
         {
-            System.Collections.Generic.List<MethodAttributeInformation<RunForVerbsAttribute>> methodAttributeInformationArray = AttributeReader.FindMethodsWithAttribute<RunForVerbsAttribute>(this);
+            List<MethodAttributeInformation<RunForVerbsAttribute>> methodAttributeInformationArray = AttributeReader.FindMethodsWithAttribute<RunForVerbsAttribute>(this);
             if (methodAttributeInformationArray == null)
             {
                 return;
             }
-            foreach (MethodAttributeInformation<RunForVerbsAttribute> mai in methodAttributeInformationArray)
+            foreach (var mai in methodAttributeInformationArray)
             {
                 HttpVerbs httpVerbs = mai.Attribute.HttpVerbs;
                 if ((Http.Method == HttpVerbs.Get && (httpVerbs & HttpVerbs.Get) == HttpVerbs.Get) ||

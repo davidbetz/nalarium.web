@@ -1,15 +1,19 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System.Configuration;
-//+
+using ConfigurationSection = Nalarium.Configuration.ConfigurationSection;
+
 namespace Nalarium.Web.Configuration
 {
     /// <summary>
     /// Provides access to the configuration section.
     /// </summary>
-    public class WebSection : Nalarium.Configuration.ConfigurationSection
+    public class WebSection : ConfigurationSection
     {
         //- @ApplicationProcessors -//
         [ConfigurationProperty("applicationInitializers")]

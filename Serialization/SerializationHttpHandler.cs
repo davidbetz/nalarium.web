@@ -1,11 +1,13 @@
 ﻿using System;
-//+
 using Nalarium.Reflection;
 //+
+
 //+
+//+
+
 namespace Nalarium.Web.Serialization
 {
-    public abstract class SerializationHttpHandler : Nalarium.Web.ReusableHttpHandler
+    public abstract class SerializationHttpHandler : ReusableHttpHandler
     {
         //- @SerializationMode -//
         public SerializationMode SerializationMode { get; set; }
@@ -58,7 +60,7 @@ namespace Nalarium.Web.Serialization
         //- $RunProcessorForVerb -//
         internal void RunForVerb()
         {
-            RunForVerbsAttribute runForVerbAttribute = AttributeReader.ReadTypeAttribute<RunForVerbsAttribute>(this);
+            var runForVerbAttribute = AttributeReader.ReadTypeAttribute<RunForVerbsAttribute>(this);
             if (runForVerbAttribute == null)
             {
                 return;

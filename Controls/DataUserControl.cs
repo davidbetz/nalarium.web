@@ -1,16 +1,20 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.ComponentModel;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web.Controls
 {
     /// <summary>
     /// This entity is to be used as a base for programmatic user controls that require a data source.
     /// </summary>
-    public abstract class DataUserControl : System.Web.UI.UserControl
+    public abstract class DataUserControl : UserControl
     {
         private Object _dataSource;
 
@@ -59,7 +63,7 @@ namespace Nalarium.Web.Controls
         protected override void FrameworkInitialize()
         {
             base.FrameworkInitialize();
-            this.BuildControlTree(this);
+            BuildControlTree(this);
         }
     }
 }

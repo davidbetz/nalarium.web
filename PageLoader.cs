@@ -1,10 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Web;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -20,15 +24,16 @@ namespace Nalarium.Web
         public static void Load(String virtualPath)
         {
             HttpContext context = Http.Context;
-            System.Web.UI.Page page = System.Web.UI.PageParser.GetCompiledPageInstance(virtualPath, null, context) as System.Web.UI.Page;
+            var page = PageParser.GetCompiledPageInstance(virtualPath, null, context) as Page;
             Http.ManuallyLoadedPage = page;
             page.ProcessRequest(context);
         }
+
         /// <summary>
         /// Loads the specific page.
         /// </summary>
         /// <param name="page">The page which to load.</param>
-        public static void Load(System.Web.UI.Page page)
+        public static void Load(Page page)
         {
             HttpContext context = Http.Context;
             Http.ManuallyLoadedPage = page;

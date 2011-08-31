@@ -1,6 +1,8 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
-//+
+using Nalarium.IO;
+
 namespace Nalarium.Web.Serialization
 {
     public class DataContractDataSerializer : DataSerializer
@@ -8,11 +10,11 @@ namespace Nalarium.Web.Serialization
         //- @Serialize -//
         public override String Serialize(Object data, Type type)
         {
-            DataContractSerializer serializer = new DataContractSerializer(type);
-            System.IO.MemoryStream stream = new System.IO.MemoryStream();
+            var serializer = new DataContractSerializer(type);
+            var stream = new MemoryStream();
             serializer.WriteObject(stream, data);
             //+
-            return Nalarium.IO.StreamConverter.GetStreamText(stream);
+            return StreamConverter.GetStreamText(stream);
         }
     }
 }

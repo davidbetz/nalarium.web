@@ -1,5 +1,5 @@
 ﻿using System;
-//+
+
 namespace Nalarium.Web.Security
 {
     public class UserNamePasswordTokenAuthenticationData : UserNamePasswordAuthenticationData

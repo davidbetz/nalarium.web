@@ -1,9 +1,16 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web;
+using System.Web.Caching;
+using Nalarium.Globalization;
+using Nalarium.Net;
+
 namespace Nalarium.Web.Globalization
 {
     public static class Translator
@@ -18,8 +25,9 @@ namespace Nalarium.Web.Globalization
         /// <returns>True is successful, false if not.</returns>
         public static Boolean Translate(String text, String sourceLanguage, out String translatedText)
         {
-            return Translate(text, sourceLanguage, Nalarium.Globalization.Culture.TwoCharacterCultureCode, TimeSpan.FromDays(5), out translatedText);
+            return Translate(text, sourceLanguage, Culture.TwoCharacterCultureCode, TimeSpan.FromDays(5), out translatedText);
         }
+
         /// <summary>
         /// Tranlates text from one language to another.
         /// </summary>
@@ -32,6 +40,7 @@ namespace Nalarium.Web.Globalization
         {
             return Translate(text, sourceLanguage, targetLanguage, TimeSpan.FromDays(5), out translatedText);
         }
+
         /// <summary>
         /// Tranlates text from one language to another.
         /// </summary>
@@ -44,13 +53,13 @@ namespace Nalarium.Web.Globalization
         public static Boolean Translate(String text, String sourceLanguage, String targetLanguage, TimeSpan cacheExpiration, out String translatedText)
         {
             String key = text + sourceLanguage + targetLanguage;
-            System.Web.Caching.Cache cache = System.Web.HttpContext.Current.Cache;
+            Cache cache = HttpContext.Current.Cache;
             if (cache[key] == null)
             {
                 //{"responseData": {"translatedText":"Gracias."}, "responseDetails": null, "responseStatus": 200}
                 //{"responseData": null, "responseDetails": "invalid translation language pair", "responseStatus": 400}
                 String url = String.Format("http://ajax.googleapis.com/ajax/services/language/translate?v=1.0&q={0}&langpair={1}|{2}", text, sourceLanguage, targetLanguage);
-                String result = Nalarium.Net.HttpAbstractor.GetWebText(new Uri(url));
+                String result = HttpAbstractor.GetWebText(new Uri(url));
                 if (result.IndexOf("\"responseStatus\": 200") == -1)
                 {
                     translatedText = String.Empty;

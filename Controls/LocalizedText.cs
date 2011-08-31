@@ -1,17 +1,30 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web.Controls
 {
     /// <summary>
     /// Used to localize text in an ASP.NET page using a standard .NET resource file.
     /// </summary>
-    public class LocalizedText : System.Web.UI.Control
+    public class LocalizedText : Control
     {
         //- @String -//
+        public LocalizedText()
+        {
+        }
+
+        public LocalizedText(String key)
+        {
+            Key = key;
+        }
+
         /// <summary>
         /// The resource key used to lookup the localized string.
         /// </summary>
@@ -37,19 +50,12 @@ namespace Nalarium.Web.Controls
 
         //+
         //- @Ctor -//
-        public LocalizedText()
-        {
-        }
-        public LocalizedText(String key)
-        {
-            Key = key;
-        }
 
         //+
         //- #Render -//
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
-            ILocalizedPage page = Http.Page as ILocalizedPage;
+            var page = Http.Page as ILocalizedPage;
             if (page != null)
             {
                 try

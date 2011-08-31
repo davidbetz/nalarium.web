@@ -1,5 +1,5 @@
 ﻿using System;
-//+
+
 namespace Nalarium.Web.Serialization
 {
     public abstract class DataSerializer

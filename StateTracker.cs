@@ -1,9 +1,13 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using Nalarium.Data;
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -11,15 +15,9 @@ namespace Nalarium.Web
     /// </summary>
     public static class StateTracker
     {
-        public static class Info
-        {
-            public const String Scope = "__$State$";
-            public const String StateData = "StateData";
-        }
-
         //+ field
-        private static Object _lock = new Object();
-        private static StringKeyValueMap _blankStringKeyValueMap = new StringKeyValueMap();
+        private static readonly Object _lock = new Object();
+        private static readonly StringKeyValueMap _blankStringKeyValueMap = new StringKeyValueMap();
 
         //- @OriginalState -//
         /// <summary>
@@ -29,11 +27,11 @@ namespace Nalarium.Web
         {
             get
             {
-                StateData data = HttpData.GetScopedItem<StateData>(Info.Scope, Info.StateData);
+                var data = HttpData.GetScopedItem<StateData>(Info.Scope, Info.StateData);
                 if (data == null)
                 {
                     data = new StateData();
-                    HttpData.SetScopedItem<StateData>(Info.Scope, Info.StateData, data);
+                    HttpData.SetScopedItem(Info.Scope, Info.StateData, data);
                 }
                 //+
                 return data;
@@ -41,7 +39,7 @@ namespace Nalarium.Web
         }
 
         //- $ValueData -//
-        private static Nalarium.Data.Base64StorableMap ValueData
+        private static Base64StorableMap ValueData
         {
             get
             {
@@ -54,7 +52,7 @@ namespace Nalarium.Web
         }
 
         //- $ControlData -//
-        private static Nalarium.Data.Base64StorableMap ControlData
+        private static Base64StorableMap ControlData
         {
             get
             {
@@ -161,8 +159,9 @@ namespace Nalarium.Web
         /// <returns>Parameter or blank if not found.</returns>
         public static String GetPostedMessageParameter(Position position)
         {
-            return Collection.GetArrayPart<String>(StateData.PostedMessageParameterArray, position) ?? String.Empty;
+            return Collection.GetArrayPart(StateData.PostedMessageParameterArray, position) ?? String.Empty;
         }
+
         /// <summary>
         /// Gets a posted message parameter by position
         /// </summary>
@@ -343,5 +342,15 @@ namespace Nalarium.Web
         public static void EnsureState()
         {
         }
+
+        #region Nested type: Info
+
+        public static class Info
+        {
+            public const String Scope = "__$State$";
+            public const String StateData = "StateData";
+        }
+
+        #endregion
     }
 }

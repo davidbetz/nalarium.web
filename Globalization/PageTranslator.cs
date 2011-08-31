@@ -1,10 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Web.UI;
-//+
+using Nalarium.Globalization;
+
 namespace Nalarium.Web.Globalization
 {
     /// <summary>
@@ -13,17 +17,6 @@ namespace Nalarium.Web.Globalization
     public static class PageTranslator
     {
         //- $Dummy-//
-        private class Dummy : System.Web.UI.Control, System.Web.UI.ITextControl
-        {
-            internal static Type _type = typeof(Dummy);
-            //+
-            //- @Text -//
-            public string Text
-            {
-                get { throw new NotImplementedException(); }
-                set { throw new NotImplementedException(); }
-            }
-        }
 
         //- @Translate-//
         /// <summary>
@@ -34,8 +27,9 @@ namespace Nalarium.Web.Globalization
         /// <param name="sourceLanguageCode">The language in which the controls are currently written.</param>
         public static void Translate<T>(Control control, String sourceLanguageCode) where T : Control, ITextControl
         {
-            Translate<T, Dummy, Dummy, Dummy, Dummy>(control, sourceLanguageCode, Nalarium.Globalization.Culture.TwoCharacterCultureCode);
+            Translate<T, Dummy, Dummy, Dummy, Dummy>(control, sourceLanguageCode, Culture.TwoCharacterCultureCode);
         }
+
         /// <summary>
         /// Translates an entire control tree.
         /// </summary>
@@ -47,6 +41,7 @@ namespace Nalarium.Web.Globalization
         {
             Translate<T, Dummy, Dummy, Dummy, Dummy>(control, sourceLanguageCode, targetLanguageCode);
         }
+
         /// <summary>
         /// Translates an entire control tree to the currently set culture.
         /// </summary>
@@ -59,8 +54,9 @@ namespace Nalarium.Web.Globalization
             where T : Control, ITextControl
             where T2 : Control, ITextControl
         {
-            Translate<T, T2, Dummy, Dummy, Dummy>(control, sourceLanguageCode, Nalarium.Globalization.Culture.TwoCharacterCultureCode);
+            Translate<T, T2, Dummy, Dummy, Dummy>(control, sourceLanguageCode, Culture.TwoCharacterCultureCode);
         }
+
         /// <summary>
         /// Translates an entire control tree.
         /// </summary>
@@ -75,6 +71,7 @@ namespace Nalarium.Web.Globalization
         {
             Translate<T, T2, Dummy, Dummy, Dummy>(control, sourceLanguageCode, targetLanguageCode);
         }
+
         /// <summary>
         /// Translates an entire control tree to the currently set culture.
         /// </summary>
@@ -88,8 +85,9 @@ namespace Nalarium.Web.Globalization
             where T2 : Control, ITextControl
             where T3 : Control, ITextControl
         {
-            Translate<T, T2, T3, Dummy, Dummy>(control, sourceLanguageCode, Nalarium.Globalization.Culture.TwoCharacterCultureCode);
+            Translate<T, T2, T3, Dummy, Dummy>(control, sourceLanguageCode, Culture.TwoCharacterCultureCode);
         }
+
         /// <summary>
         /// Translates an entire control tree.
         /// </summary>
@@ -106,6 +104,7 @@ namespace Nalarium.Web.Globalization
         {
             Translate<T, T2, T3, Dummy, Dummy>(control, sourceLanguageCode, targetLanguageCode);
         }
+
         /// <summary>
         /// Translates an entire control tree to the currently set culture.
         /// </summary>
@@ -121,8 +120,9 @@ namespace Nalarium.Web.Globalization
             where T3 : Control, ITextControl
             where T4 : Control, ITextControl
         {
-            Translate<T, T2, T3, T4, Dummy>(control, sourceLanguageCode, Nalarium.Globalization.Culture.TwoCharacterCultureCode);
+            Translate<T, T2, T3, T4, Dummy>(control, sourceLanguageCode, Culture.TwoCharacterCultureCode);
         }
+
         /// Translates an entire control tree.
         /// </summary>
         /// <typeparam name="T">Type of Control which to translate.  Must be an ITextControl.</typeparam>
@@ -140,6 +140,7 @@ namespace Nalarium.Web.Globalization
         {
             Translate<T, T2, T3, T4, Dummy>(control, sourceLanguageCode, targetLanguageCode);
         }
+
         /// Translates an entire control tree to the currently set culture.
         /// </summary>
         /// <typeparam name="T">Type of Control which to translate.  Must be an ITextControl.</typeparam>
@@ -156,8 +157,10 @@ namespace Nalarium.Web.Globalization
             where T4 : Control, ITextControl
             where T5 : Control, ITextControl
         {
-            Translate<T, T2, T3, T4, Dummy>(control, sourceLanguageCode, Nalarium.Globalization.Culture.TwoCharacterCultureCode);
-        }        /// <summary>
+            Translate<T, T2, T3, T4, Dummy>(control, sourceLanguageCode, Culture.TwoCharacterCultureCode);
+        }
+
+        /// <summary>
         /// Translates an entire control tree.
         /// </summary>
         /// <typeparam name="T">Type of Control which to translate.  Must be an ITextControl.</typeparam>
@@ -215,10 +218,11 @@ namespace Nalarium.Web.Globalization
                 }
             }
         }
+
         //- $TranslateSingleControl -//
         private static Boolean TranslateSingleControl<T>(Control childControl, String sourceLanguageCode, String targetLanguageCode) where T : Control, ITextControl
         {
-            T literal = childControl as T;
+            var literal = childControl as T;
             if (literal != null)
             {
                 String translatedText;
@@ -233,5 +237,32 @@ namespace Nalarium.Web.Globalization
                 return false;
             }
         }
+
+        #region Nested type: Dummy
+
+        private class Dummy : Control, ITextControl
+        {
+            internal static readonly Type _type = typeof(Dummy);
+            //+
+            //- @Text -//
+
+            #region ITextControl Members
+
+            public string Text
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+                set
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            #endregion
+        }
+
+        #endregion
     }
 }

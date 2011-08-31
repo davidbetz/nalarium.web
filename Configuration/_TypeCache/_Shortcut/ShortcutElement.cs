@@ -1,14 +1,19 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Configuration;
-//+
+using System.Diagnostics;
+using Nalarium.Configuration;
+
 namespace Nalarium.Web.Configuration
 {
-    [System.Diagnostics.DebuggerDisplay("{Name}, {BaseType}")]
-    public class ShortcutElement : Nalarium.Configuration.CommentableElement
+    [DebuggerDisplay("{Name}, {BaseType}")]
+    public class ShortcutElement : CommentableElement
     {
         //- @Name -//
         [ConfigurationProperty("name", IsRequired = true)]

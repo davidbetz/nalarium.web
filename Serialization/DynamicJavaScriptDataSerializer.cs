@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Web.Script.Serialization;
-//+
+
 namespace Nalarium.Web.Serialization
 {
     public class DynamicJavaScriptDataSerializer : DataSerializer

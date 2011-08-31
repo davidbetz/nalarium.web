@@ -1,15 +1,21 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Text;
+using System.Web.UI;
+using System.Web.UI.WebControls;
+
 namespace Nalarium.Web.Controls
 {
     /// <summary>
     /// Represents a control container
     /// </summary>
-    public class Container : System.Web.UI.WebControls.PlaceHolder
+    public class Container : PlaceHolder
     {
         private ContainerType _containerType = ContainerType.None;
 
@@ -62,9 +68,9 @@ namespace Nalarium.Web.Controls
 
         //+
         //- #Render -//
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
-            System.Text.StringBuilder builder = new System.Text.StringBuilder();
+            var builder = new StringBuilder();
             if (!String.IsNullOrEmpty(TagName))
             {
                 builder.Append("<" + TagName);

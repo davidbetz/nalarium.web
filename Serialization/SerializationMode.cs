@@ -1,4 +1,5 @@
 ﻿//+
+
 namespace Nalarium.Web.Serialization
 {
     public enum SerializationMode

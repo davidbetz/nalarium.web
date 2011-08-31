@@ -1,23 +1,31 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
-//+
+using System.Configuration;
+using System.IO;
+using System.Web;
 using Nalarium.Activation;
 using Nalarium.Web.Configuration;
+//+
+
 //using Nalarium.Web.Configuration;
 //+
+
 namespace Nalarium.Web
 {
     /// <summary>
     /// Represents a Nalarium Pro web-based application.
     /// </summary>
-    public class Application : System.Web.HttpApplication
+    public class Application : HttpApplication
     {
-        private static Object _lock = new Object();
-        private static Int32 _totalUserCount = 0;
+        private static readonly Object _lock = new Object();
+        private static Int32 _totalUserCount;
         private static DateTime _appStartDateTime;
         private static List<GlobalApplicationInitializer> _appLifeCycleInitializerList;
         private static List<SessionApplicationInitializer> _sessionLifeCycleInitializerList;
@@ -111,20 +119,20 @@ namespace Nalarium.Web
                     ApplicationInitializer processor;
                     if (!processorElement.InitializerType.Contains(","))
                     {
-                        throw new System.Configuration.ConfigurationErrorsException(Resource.Processor_LifeCycleTypeAndAssemblyRequired);
+                        throw new ConfigurationErrorsException(Resource.Processor_LifeCycleTypeAndAssemblyRequired);
                     }
                     processor = ObjectCreator.CreateAs<ApplicationInitializer>(processorElement.InitializerType);
                     //+
                     if (processor != null)
                     {
-                        GlobalApplicationInitializer appLifeCycleProcessor = processor as GlobalApplicationInitializer;
+                        var appLifeCycleProcessor = processor as GlobalApplicationInitializer;
                         if (appLifeCycleProcessor != null)
                         {
                             _appLifeCycleInitializerList.Add(appLifeCycleProcessor);
                         }
                         else
                         {
-                            SessionApplicationInitializer sessionApplicationProcessor = processor as SessionApplicationInitializer;
+                            var sessionApplicationProcessor = processor as SessionApplicationInitializer;
                             if (sessionApplicationProcessor != null)
                             {
                                 _sessionLifeCycleInitializerList.Add(sessionApplicationProcessor);
@@ -132,9 +140,9 @@ namespace Nalarium.Web
                         }
                     }
                 }
-                catch (System.IO.FileNotFoundException ex)
+                catch (FileNotFoundException ex)
                 {
-                    throw new System.Configuration.ConfigurationErrorsException(String.Format(Resource.Processor_LifeCycleAssemblyInvalid, ex.Message));
+                    throw new ConfigurationErrorsException(String.Format(Resource.Processor_LifeCycleAssemblyInvalid, ex.Message));
                 }
             }
         }

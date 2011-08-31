@@ -1,9 +1,14 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Collections.Generic;
+using System.Web.UI;
+
 namespace Nalarium.Web
 {
     /// <summary>
@@ -18,13 +23,13 @@ namespace Nalarium.Web
         /// <param name="descendant">The ancestor element of the control.</param>
         /// <param name="controlName">Name of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static System.Web.UI.Control FindControlThroughAncestors(System.Web.UI.Control descendant, String parentId)
+        public static Control FindControlThroughAncestors(Control descendant, String parentId)
         {
             if (descendant == null)
             {
                 return null;
             }
-            System.Web.UI.Control foundControl = descendant.Parent;
+            Control foundControl = descendant.Parent;
             if (foundControl.ID == parentId)
             {
                 return foundControl;
@@ -32,6 +37,7 @@ namespace Nalarium.Web
             //+
             return FindControlThroughAncestors(foundControl, parentId);
         }
+
         /// <summary>
         /// Looks for a control by going through ancestors.
         /// </summary>
@@ -39,7 +45,7 @@ namespace Nalarium.Web
         /// <param name="descendant">The ancestor element of the control.</param>
         /// <param name="controlName">Name of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static T FindControlThroughAncestors<T>(System.Web.UI.Control descendant, String parentId) where T : System.Web.UI.Control
+        public static T FindControlThroughAncestors<T>(Control descendant, String parentId) where T : Control
         {
             return FindControlThroughAncestors(descendant, parentId) as T;
         }
@@ -52,13 +58,13 @@ namespace Nalarium.Web
         /// <param name="descendant">The ancestor element of the control.</param>
         /// <param name="controlName">Name of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static T FindControlThroughAncestorsByType<T>(System.Web.UI.Control descendant) where T : System.Web.UI.Control
+        public static T FindControlThroughAncestorsByType<T>(Control descendant) where T : Control
         {
             if (descendant == null)
             {
                 return null;
             }
-            T castControl = descendant.Parent as T;
+            var castControl = descendant.Parent as T;
             if (castControl != null)
             {
                 return castControl;
@@ -74,16 +80,16 @@ namespace Nalarium.Web
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <param name="controlName">Name of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static System.Web.UI.Control FindControlRecursively(System.Web.UI.Control ancestor, String controlId)
+        public static Control FindControlRecursively(Control ancestor, String controlId)
         {
             if (ancestor != null)
             {
-                System.Web.UI.Control foundControl = ancestor.FindControl(controlId);
+                Control foundControl = ancestor.FindControl(controlId);
                 if (foundControl != null)
                 {
                     return foundControl;
                 }
-                foreach (System.Web.UI.Control c in ancestor.Controls)
+                foreach (Control c in ancestor.Controls)
                 {
                     foundControl = FindControlRecursively(c, controlId);
                     if (foundControl != null)
@@ -95,6 +101,7 @@ namespace Nalarium.Web
             //+
             return null;
         }
+
         /// <summary>
         /// Recursively searched for an ASP.NET control by name.
         /// </summary>
@@ -102,7 +109,7 @@ namespace Nalarium.Web
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <param name="controlName">Name of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static T FindControlRecursively<T>(System.Web.UI.Control ancestor, String controlId) where T : System.Web.UI.Control
+        public static T FindControlRecursively<T>(Control ancestor, String controlId) where T : Control
         {
             return FindControlRecursively(ancestor, controlId) as T;
         }
@@ -114,10 +121,11 @@ namespace Nalarium.Web
         /// <typeparam name="T">The type of the control to find.</typeparam>
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static T FindControlRecursivelyByType<T>(System.Web.UI.Control ancestor) where T : System.Web.UI.Control
+        public static T FindControlRecursivelyByType<T>(Control ancestor) where T : Control
         {
             return FindControlRecursivelyByType<T>(ancestor, false);
         }
+
         //- @FindControlRecursivelyByType -//
         /// <summary>
         /// Recursively searched for an ASP.NET control by type.
@@ -126,7 +134,7 @@ namespace Nalarium.Web
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <param name="allowSubType">True is the type can be a subtype of T.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static T FindControlRecursivelyByType<T>(System.Web.UI.Control ancestor, Boolean allowSubType) where T : System.Web.UI.Control
+        public static T FindControlRecursivelyByType<T>(Control ancestor, Boolean allowSubType) where T : Control
         {
             T control = null;
             if (ancestor.Controls != null && ancestor.Controls.Count > 0)
@@ -158,10 +166,11 @@ namespace Nalarium.Web
         /// <typeparam name="T">The type of the contro lto find.</typeparam>
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static System.Collections.Generic.List<T> FindAllControlsRecursivelyByType<T>(System.Web.UI.Control ancestor) where T : System.Web.UI.Control
+        public static List<T> FindAllControlsRecursivelyByType<T>(Control ancestor) where T : Control
         {
             return FindAllControlsRecursivelyByType<T>(ancestor, false);
         }
+
         //- @FindControlRecursivelyByType -//
         /// <summary>
         /// Recursively searched for an ASP.NET control by type.
@@ -170,9 +179,9 @@ namespace Nalarium.Web
         /// <param name="ancestor">The ancestor element of the control.</param>
         /// <param name="allowSubType">True is the type can be a subtype of T.</param>
         /// <returns>Found control or null if not found.</returns>
-        public static System.Collections.Generic.List<T> FindAllControlsRecursivelyByType<T>(System.Web.UI.Control ancestor, Boolean allowSubType) where T : System.Web.UI.Control
+        public static List<T> FindAllControlsRecursivelyByType<T>(Control ancestor, Boolean allowSubType) where T : Control
         {
-            System.Collections.Generic.List<T> list = new System.Collections.Generic.List<T>();
+            var list = new List<T>();
             T control = null;
             if (ancestor.Controls != null && ancestor.Controls.Count > 0)
             {
@@ -188,7 +197,7 @@ namespace Nalarium.Web
                     }
                     else
                     {
-                        System.Collections.Generic.List<T> returnList = FindAllControlsRecursivelyByType<T>(ancestor.Controls[i], allowSubType);
+                        List<T> returnList = FindAllControlsRecursivelyByType<T>(ancestor.Controls[i], allowSubType);
                         if (returnList.Count > 0)
                         {
                             list.AddRange(returnList);

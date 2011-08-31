@@ -1,12 +1,15 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.IO;
 using System.Reflection;
 using System.Web.UI;
-//+
+
 namespace Nalarium.Web
 {
     public static class ResourceReader
@@ -16,13 +19,14 @@ namespace Nalarium.Web
         {
             return ReadResource(Assembly.Load(assemblyName), resourceName, out contentType);
         }
+
         public static string ReadResource(Assembly assembly, string resourceName, out string contentType)
         {
             contentType = ReadContentType(assembly, resourceName);
-            UnmanagedMemoryStream resourceStream = (UnmanagedMemoryStream)assembly.GetManifestResourceStream(resourceName);
+            var resourceStream = (UnmanagedMemoryStream)assembly.GetManifestResourceStream(resourceName);
             if (resourceStream != null)
             {
-                StreamReader reader = new StreamReader(resourceStream, true);
+                var reader = new StreamReader(resourceStream, true);
                 return reader.ReadToEnd();
             }
             //+
@@ -34,6 +38,7 @@ namespace Nalarium.Web
         {
             return ReadContentType(Assembly.Load(assemblyName), resourceName);
         }
+
         public static String ReadContentType(Assembly assembly, String resourceName)
         {
             WebResourceAttribute webResourceAttribute = ReadWebResourceAttribute(assembly, resourceName);
@@ -50,6 +55,7 @@ namespace Nalarium.Web
         {
             return ReadWebResourceAttribute(Assembly.Load(assemblyName), resourceName);
         }
+
         public static WebResourceAttribute ReadWebResourceAttribute(Assembly assembly, String resourceName)
         {
             Object[] attributeArray = assembly.GetCustomAttributes(typeof(WebResourceAttribute), false);
@@ -60,7 +66,7 @@ namespace Nalarium.Web
             //+
             foreach (Object item in attributeArray)
             {
-                WebResourceAttribute webResourceAttribute = item as WebResourceAttribute;
+                var webResourceAttribute = item as WebResourceAttribute;
                 if (webResourceAttribute == null)
                 {
                     continue;

@@ -1,11 +1,15 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Globalization;
 using Nalarium.Reporting;
 //+
+
 namespace Nalarium.Web.Reporting
 {
     public class ReportCreatorFactory : Nalarium.Reporting.ReportCreatorFactory
@@ -20,7 +24,7 @@ namespace Nalarium.Web.Reporting
         {
             if (!String.IsNullOrEmpty(name))
             {
-                switch (name.ToLower(System.Globalization.CultureInfo.CurrentCulture))
+                switch (name.ToLower(CultureInfo.CurrentCulture))
                 {
                     case "httpcontext":
                         return new HttpContextReportCreator();

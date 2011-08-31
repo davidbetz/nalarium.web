@@ -1,20 +1,18 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Collections.Generic;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web.Controls
 {
-    public class ControlLifeCycleTracker : System.Web.UI.Control
+    public class ControlLifeCycleTracker : Control
     {
-        public class Info
-        {
-            public const String Scope = "LifeCycleTracker";
-            public const String LifeCycleCompletedPosition = "LifeCycleCompletedPosition";
-        }
-
         //+ field
         public static List<LifeCycleCompletedPosition> LifeCycleCompletedPositionList
         {
@@ -24,7 +22,7 @@ namespace Nalarium.Web.Controls
             }
             private set
             {
-                HttpData.SetScopedItem<List<LifeCycleCompletedPosition>>(Info.Scope, Info.LifeCycleCompletedPosition, value);
+                HttpData.SetScopedItem(Info.Scope, Info.LifeCycleCompletedPosition, value);
             }
         }
 
@@ -32,7 +30,7 @@ namespace Nalarium.Web.Controls
         //- @AddToPage -//
         public static void AddToPage()
         {
-            System.Web.UI.Page page = Http.Page;
+            Page page = Http.Page;
             if (page == null)
             {
                 return;
@@ -52,7 +50,7 @@ namespace Nalarium.Web.Controls
         }
 
         //- #CreateControlCollection -//
-        protected override System.Web.UI.ControlCollection CreateControlCollection()
+        protected override ControlCollection CreateControlCollection()
         {
             LifeCycleCompletedPositionList.Add(LifeCycleCompletedPosition.CreateControlCollection);
             return base.CreateControlCollection();
@@ -109,7 +107,7 @@ namespace Nalarium.Web.Controls
         }
 
         //- #Render -//
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
             LifeCycleCompletedPositionList.Add(LifeCycleCompletedPosition.Render);
         }
@@ -119,5 +117,15 @@ namespace Nalarium.Web.Controls
         {
             LifeCycleCompletedPositionList.Add(LifeCycleCompletedPosition.Unload);
         }
+
+        #region Nested type: Info
+
+        public class Info
+        {
+            public const String Scope = "LifeCycleTracker";
+            public const String LifeCycleCompletedPosition = "LifeCycleCompletedPosition";
+        }
+
+        #endregion
     }
 }

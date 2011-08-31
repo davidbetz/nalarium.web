@@ -1,27 +1,32 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 //+
 using System;
+using Nalarium.Data;
+
 namespace Nalarium.Web
 {
     internal class StateData
     {
-        internal Nalarium.Data.Base64StorableMap ValueData { get; set; }
-        internal Nalarium.Data.Base64StorableMap ControlData { get; set; }
+        public StateData()
+        {
+            ValueData = new Base64StorableMap();
+            ControlData = new Base64StorableMap();
+            StateMap = new StringKeyValueMap();
+        }
+
+        internal Base64StorableMap ValueData { get; set; }
+        internal Base64StorableMap ControlData { get; set; }
         internal StringKeyValueMap StateMap { get; set; }
         internal String PostedMessage { get; set; }
         internal String OutputMessage { get; set; }
         internal String[] PostedMessageParameterArray { get; set; }
         internal String Message { get; set; }
-
-        public StateData()
-        {
-            ValueData = new Nalarium.Data.Base64StorableMap();
-            ControlData = new Nalarium.Data.Base64StorableMap();
-            StateMap = new StringKeyValueMap();
-        }
 
         public void Init()
         {
@@ -50,7 +55,7 @@ namespace Nalarium.Web
                 Message = PostedMessage;
             }
             //+ state
-            StringKeyValueMap stringKeyValueMap = new StringKeyValueMap();
+            var stringKeyValueMap = new StringKeyValueMap();
             String state = Http.Form.Get("__THEMELIASTATE");
             if (!String.IsNullOrEmpty(state))
             {
@@ -64,37 +69,37 @@ namespace Nalarium.Web
         //- $LoadControlData -//
         private static void LoadControlData(StringKeyValueMap stringKeyValueMap, String blogState)
         {
-            Nalarium.Data.Base64StorableMap map = new Nalarium.Data.Base64StorableMap(blogState);
+            var map = new Base64StorableMap(blogState);
             map.GetKeyList().ForEach((controlKey) =>
-            {
-                String controlId = map[controlKey];
-                String value = Http.Form.Get(controlId);
-                //+ re-register
-                StateTracker.Set(StateEntryType.ControlId, controlKey, controlId);
-                //+ load
-                if (!String.IsNullOrEmpty(value))
-                {
-                    stringKeyValueMap.Add(controlKey, new StringKeyValue
-                    {
-                        Key = controlId,
-                        Value = value
-                    });
-                }
-                else
-                {
-                    stringKeyValueMap.Add(controlKey, new StringKeyValue
-                    {
-                        Key = controlId,
-                        Value = null
-                    });
-                }
-            });
+                                     {
+                                         String controlId = map[controlKey];
+                                         String value = Http.Form.Get(controlId);
+                                         //+ re-register
+                                         StateTracker.Set(StateEntryType.ControlId, controlKey, controlId);
+                                         //+ load
+                                         if (!String.IsNullOrEmpty(value))
+                                         {
+                                             stringKeyValueMap.Add(controlKey, new StringKeyValue
+                                                                               {
+                                                                                   Key = controlId,
+                                                                                   Value = value
+                                                                               });
+                                         }
+                                         else
+                                         {
+                                             stringKeyValueMap.Add(controlKey, new StringKeyValue
+                                                                               {
+                                                                                   Key = controlId,
+                                                                                   Value = null
+                                                                               });
+                                         }
+                                     });
         }
 
         //- $LoadControlData -//
         private static void LoadValueData(StringKeyValueMap stringKeyValueMap, String blogState)
         {
-            Nalarium.Data.Base64StorableMap map = new Nalarium.Data.Base64StorableMap(blogState);
+            var map = new Base64StorableMap(blogState);
             map.GetKeyList().ForEach((key) => StateTracker.Set(StateEntryType.Value, key, map[key]));
         }
 
@@ -121,7 +126,10 @@ namespace Nalarium.Web
                 }
             }
             //+
-            return new String[2] { controlIdPart, valuePart };
+            return new String[2]
+                   {
+                       controlIdPart, valuePart
+                   };
         }
     }
 }

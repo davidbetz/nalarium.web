@@ -1,12 +1,17 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Text;
+using System.Web.UI;
+
 namespace Nalarium.Web.Controls
 {
-    public class Paragraph : System.Web.UI.Control
+    public class Paragraph : Control
     {
         //- @Text -//
         public String Text { get; set; }
@@ -16,19 +21,16 @@ namespace Nalarium.Web.Controls
 
         //+
         //- @Ctor -//
-        public Paragraph()
-        {
-        }
 
         //- #Render -//
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
-            System.Text.StringBuilder builder = new System.Text.StringBuilder("<p");
+            var builder = new StringBuilder("<p");
             if (!String.IsNullOrEmpty(ClassName))
             {
                 builder.Append(" class=\"" + ClassName + "\"");
             }
-            builder.Append(">" + this.Text + "</p>");
+            builder.Append(">" + Text + "</p>");
             writer.Write(builder.ToString());
             //+
             base.Render(writer);

@@ -1,11 +1,17 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Reflection;
+using System.Text;
 using System.Web;
-//+
+using System.Web.Configuration;
+using System.Web.UI;
+
 namespace Nalarium.Web
 {
     public static class MachineKeyCryptographer
@@ -17,10 +23,13 @@ namespace Nalarium.Web
             {
                 return String.Empty;
             }
-            Type pageType = typeof(System.Web.UI.Page);
-            System.Reflection.MethodInfo methodInfo = pageType.GetMethod("EncryptString", BindingFlags.Static | BindingFlags.NonPublic);
+            Type pageType = typeof(Page);
+            MethodInfo methodInfo = pageType.GetMethod("EncryptString", BindingFlags.Static | BindingFlags.NonPublic);
             //+
-            return methodInfo.Invoke(null, new Object[] { code }) as string;
+            return methodInfo.Invoke(null, new Object[]
+                                           {
+                                               code
+                                           }) as string;
         }
 
         //- @DecryptCode -//
@@ -31,17 +40,23 @@ namespace Nalarium.Web
                 return String.Empty;
             }
             Byte[] encryptedData = HttpServerUtility.UrlTokenDecode(code);
-            Type machineKeySection = typeof(System.Web.Configuration.MachineKeySection);
-            Type[] paramTypes = new Type[] { typeof(Boolean), typeof(Byte[]), typeof(Byte[]), typeof(Int32), typeof(Int32) };
-            System.Reflection.MethodInfo encryptOrDecryptData = machineKeySection.GetMethod("EncryptOrDecryptData", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic, null, paramTypes, null);
+            Type machineKeySection = typeof(MachineKeySection);
+            var paramTypes = new[]
+                             {
+                                 typeof(Boolean), typeof(Byte[]), typeof(Byte[]), typeof(Int32), typeof(Int32)
+                             };
+            MethodInfo encryptOrDecryptData = machineKeySection.GetMethod("EncryptOrDecryptData", BindingFlags.Static | BindingFlags.NonPublic, null, paramTypes, null);
             try
             {
-                Byte[] decryptedData = (Byte[])encryptOrDecryptData.Invoke(null, new Object[] { false, encryptedData, null, 0, encryptedData.Length });
-                string decrypted = System.Text.Encoding.UTF8.GetString(decryptedData);
+                var decryptedData = (Byte[])encryptOrDecryptData.Invoke(null, new Object[]
+                                                                              {
+                                                                                  false, encryptedData, null, 0, encryptedData.Length
+                                                                              });
+                string decrypted = Encoding.UTF8.GetString(decryptedData);
                 //+
                 return decrypted;
             }
-            catch (System.Reflection.TargetInvocationException)
+            catch (TargetInvocationException)
             {
                 return string.Empty;
             }
@@ -66,7 +81,10 @@ namespace Nalarium.Web
                 return null;
             }
             //+
-            return new String[] { partArray[0][0].ToString(), partArray[0].Substring(1, partArray[0].Length - 1), partArray[1] };
+            return new[]
+                   {
+                       partArray[0][0].ToString(), partArray[0].Substring(1, partArray[0].Length - 1), partArray[1]
+                   };
         }
     }
 }

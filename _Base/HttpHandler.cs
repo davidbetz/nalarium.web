@@ -1,14 +1,17 @@
 ﻿#region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
 using System.Text;
 using System.Web;
-//+
+
 namespace Nalarium.Web
 {
-    public abstract class HttpHandler : System.Web.IHttpHandler
+    public abstract class HttpHandler : IHttpHandler
     {
         private StringBuilder _output = new StringBuilder();
 
@@ -52,13 +55,19 @@ namespace Nalarium.Web
         }
 
         //- @IsReusable -//
+
+        #region IHttpHandler Members
+
         public virtual Boolean IsReusable
         {
-            get { return false; }
+            get
+            {
+                return false;
+            }
         }
 
         //- $ProcessRequest -//
-        void System.Web.IHttpHandler.ProcessRequest(System.Web.HttpContext context)
+        void IHttpHandler.ProcessRequest(HttpContext context)
         {
             Context = context;
             Request = context.Request;
@@ -73,7 +82,9 @@ namespace Nalarium.Web
             }
         }
 
+        #endregion
+
         //- @Process  -//
-        public abstract void Process( );
+        public abstract void Process();
     }
 }

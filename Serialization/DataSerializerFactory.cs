@@ -1,4 +1,5 @@
 ﻿//+
+
 namespace Nalarium.Web.Serialization
 {
     public static class DataSerializerFactory
@@ -7,15 +8,15 @@ namespace Nalarium.Web.Serialization
         {
             switch (mode)
             {
-                //+ json
+                    //+ json
                 case SerializationMode.DataContractJson:
                     return new DataContractJsonDataSerializer();
 
-                //+ xml
+                    //+ xml
                 case SerializationMode.DataContract:
                     return new DataContractDataSerializer();
 
-                //+ javascript
+                    //+ javascript
                 case SerializationMode.DynamicJavaScript:
                     return new DynamicJavaScriptDataSerializer();
             }

@@ -1,17 +1,33 @@
 #region Copyright
+
 //+ Nalarium Pro 3.0 - Web Module
 //+ Copyright © Jampad Technology, Inc. 2008-2010
+
 #endregion
+
 using System;
-//+
+using System.Web.UI;
+
 namespace Nalarium.Web.Controls
 {
     /// <summary>
     /// Adds Google Analytics to the page.
     /// </summary>
-    public class GoogleAnalytics : System.Web.UI.Control
+    public class GoogleAnalytics : Control
     {
         //- @TrackingCode -//
+
+        //+
+        //- @Ctor -//
+        public GoogleAnalytics()
+        {
+        }
+
+        public GoogleAnalytics(String trackingCode)
+        {
+            TrackingCode = trackingCode;
+        }
+
         /// <summary>
         /// Analytics tracking code including the prefix (i.e. UA-).
         /// </summary>
@@ -22,18 +38,8 @@ namespace Nalarium.Web.Controls
         public String Path { get; set; }
 
         //+
-        //- @Ctor -//
-        public GoogleAnalytics()
-        {
-        }
-        public GoogleAnalytics(String trackingCode)
-        {
-            TrackingCode = trackingCode;
-        }
-
-        //+
         //- #Render -//
-        protected override void Render(System.Web.UI.HtmlTextWriter writer)
+        protected override void Render(HtmlTextWriter writer)
         {
             if (String.IsNullOrEmpty(TrackingCode))
             {
