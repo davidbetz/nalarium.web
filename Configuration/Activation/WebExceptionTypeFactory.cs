@@ -12,7 +12,7 @@ using System.Web.Management;
 using System.Web.UI;
 using Nalarium.Activation;
 
-namespace Nalarium.Web.Activation
+namespace Nalarium.Web.Configuration.Activation
 {
     internal class WebExceptionTypeFactory : TypeFactory
     {
@@ -23,23 +23,23 @@ namespace Nalarium.Web.Activation
             switch (text)
             {
                 case "http":
-                    return TypeCache.InlineRegister(typeof(HttpException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(HttpException));
                 case "httpunhandled":
-                    return TypeCache.InlineRegister(typeof(HttpUnhandledException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(HttpUnhandledException));
                 case "httpcompile":
-                    return TypeCache.InlineRegister(typeof(HttpCompileException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(HttpCompileException));
                 case "httpparse":
-                    return TypeCache.InlineRegister(typeof(HttpParseException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(HttpParseException));
                 case "httprequestvalidation":
-                    return TypeCache.InlineRegister(typeof(HttpRequestValidationException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(HttpRequestValidationException));
                 case "databasenotenabledfornotification":
-                    return TypeCache.InlineRegister(typeof(DatabaseNotEnabledForNotificationException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(DatabaseNotEnabledForNotificationException));
                 case "tablenotenabledfornotification":
-                    return TypeCache.InlineRegister(typeof(TableNotEnabledForNotificationException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(TableNotEnabledForNotificationException));
                 case "sqlexecution":
-                    return TypeCache.InlineRegister(typeof(SqlExecutionException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(SqlExecutionException));
                 case "viewstate":
-                    return TypeCache.InlineRegister(typeof(ViewStateException));
+                    return Nalarium.Activation.TypeCache.InlineRegister(typeof(ViewStateException));
             }
             //+
             return ex;

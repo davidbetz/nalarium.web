@@ -7,9 +7,9 @@
 
 using System;
 using System.Configuration;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
 
-namespace Nalarium.Web.Configuration
+namespace Nalarium.Web.Configuration.Initializer
 {
     public class InitializerCollection : CommentableCollection<InitializerElement>
     {

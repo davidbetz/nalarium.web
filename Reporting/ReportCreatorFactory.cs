@@ -7,12 +7,12 @@
 
 using System;
 using System.Globalization;
-using Nalarium.Reporting;
 //+
+using Nalarium.Reporting.ReportCreator;
 
 namespace Nalarium.Web.Reporting
 {
-    public class ReportCreatorFactory : Nalarium.Reporting.ReportCreatorFactory
+    public class ReportCreatorFactory : Nalarium.Reporting.ReportCreator.ReportCreatorFactory
     {
         //- @Create -//
         /// <summary>

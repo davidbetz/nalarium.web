@@ -7,9 +7,10 @@
 
 using System.Configuration;
 using System.Diagnostics;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
+using Nalarium.Web.Configuration.TypeCache._Shortcut;
 
-namespace Nalarium.Web.Configuration
+namespace Nalarium.Web.Configuration.TypeCache
 {
     [DebuggerDisplay("{Name}")]
     public class TypeCacheElement : CommentableElement

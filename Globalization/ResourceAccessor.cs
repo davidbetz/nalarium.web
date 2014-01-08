@@ -6,6 +6,7 @@
 #endregion
 
 using System;
+using Nalarium.Web.Properties;
 
 namespace Nalarium.Web.Globalization
 {

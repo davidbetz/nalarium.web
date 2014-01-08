@@ -16,6 +16,7 @@ using Nalarium.Web.Configuration;
 
 //using Nalarium.Web.Configuration;
 //+
+using Nalarium.Web.Configuration.Initializer;
 
 namespace Nalarium.Web
 {

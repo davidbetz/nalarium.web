@@ -8,9 +8,9 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using Nalarium.Configuration;
+using Nalarium.Configuration.AppConfig;
 
-namespace Nalarium.Web.Configuration
+namespace Nalarium.Web.Configuration.Initializer
 {
     [DebuggerDisplay("{InitializerType}, {Priority}")]
     public class InitializerElement : WithParameterArrayElement

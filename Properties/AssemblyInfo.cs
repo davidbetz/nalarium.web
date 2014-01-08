@@ -28,7 +28,7 @@ using System.Text;
 [assembly: InternalsVisibleTo("Nalarium.Web.Processing, PublicKey=dc6429114df2bd49")]
 //+
 
-namespace Nalarium.Web
+namespace Nalarium.Web.Properties
 {
     [NotDocumented]
     public class AssemblyInfo

@@ -6,7 +6,10 @@
 #endregion
 
 using System.Configuration;
-using ConfigurationSection = Nalarium.Configuration.ConfigurationSection;
+using Nalarium.Web.Configuration.Initializer;
+using Nalarium.Web.Configuration.Profiling;
+using Nalarium.Web.Configuration.TypeCache;
+using ConfigurationSection = Nalarium.Configuration.AppConfig.ConfigurationSection;
 
 namespace Nalarium.Web.Configuration
 {

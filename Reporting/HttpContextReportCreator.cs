@@ -9,6 +9,8 @@ using System;
 using System.Web;
 using Nalarium.Reporting;
 //+
+using Nalarium.Reporting.ReportCreator;
+using Nalarium.Reporting.ReportCreator.Formatter;
 
 namespace Nalarium.Web.Reporting
 {
