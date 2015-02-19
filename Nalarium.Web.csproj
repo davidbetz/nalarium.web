@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nalarium.Web</RootNamespace>
     <AssemblyName>Nalarium.Web</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Nalarium.snk</AssemblyOriginatorKeyFile>
@@ -50,6 +50,7 @@
     </CodeAnalysisRules>
     <CodeAnalysisIgnoreGeneratedCode>true</CodeAnalysisIgnoreGeneratedCode>
     <CodeAnalysisRuleSet>Migrated rules for Nalarium.Web.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -60,6 +61,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Nalarium.Web.xml</DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Nalarium, Version=3.0.0.0, Culture=neutral, PublicKeyToken=dc6429114df2bd49, processorArchitecture=MSIL">
@@ -101,6 +103,7 @@
     <Compile Include="Configuration\Initializer\InitializerCollection.cs" />
     <Compile Include="Configuration\Initializer\InitializerElement.cs" />
     <Compile Include="Controls\GoogleAnalytics.cs" />
+    <Compile Include="Controls\MessageButton.cs" />
     <Compile Include="HtmlElement.cs" />
     <Compile Include="IHasPage.cs" />
     <Compile Include="ScannedTypeCache.cs" />
@@ -133,10 +136,10 @@
     <Compile Include="Controls\StateArea.cs" />
     <Compile Include="HttpApplicationEvent.cs" />
     <Compile Include="InvalidLicenseException.cs" />
-    <Compile Include="Globalization\ResourceAccessor.cs" />
-    <Compile Include="Globalization\PageTranslator.cs">
+    <Compile Include="Controls\Globalization\ResourceAccessor.cs" />
+    <Compile Include="Controls\Globalization\PageTranslator.cs">
     </Compile>
-    <Compile Include="Globalization\Translator.cs" />
+    <Compile Include="Controls\Globalization\Translator.cs" />
     <Compile Include="PageLoader.cs" />
     <Compile Include="HttpExceptionThrower.cs" />
     <Compile Include="Application.cs" />
