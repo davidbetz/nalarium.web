@@ -12,6 +12,7 @@ namespace Nalarium.Web
     /// <summary>
     /// Cleans a URL.
     /// </summary>
+    [Obsolete("Use Nalarium.UrlCleaner")]
     public static class UrlCleaner
     {
         //- @Merge -//
@@ -19,9 +20,22 @@ namespace Nalarium.Web
         /// Cleanly merges two paths.
         /// </summary>
         /// <param name="path1">The first path.</param>
-        /// <param name="path2">The secondpath.</param>
+        /// <param name="path2">The second path.</param>
         /// <returns>The merged path.</returns>
+        [Obsolete("Use Join")]
         public static String Merge(String path1, String path2)
+        {
+            return Join(path1, path2);
+        }
+
+        //- @Join -//
+        /// <summary>
+        /// Cleanly joins two paths.
+        /// </summary>
+        /// <param name="path1">The first path.</param>
+        /// <param name="path2">The second path.</param>
+        /// <returns>The merged path.</returns>
+        public static String Join(String path1, String path2)
         {
             return CleanWebPath(path1) + "/" + CleanWebPath(path2);
         }
