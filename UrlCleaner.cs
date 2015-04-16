@@ -12,7 +12,7 @@ namespace Nalarium.Web
     /// <summary>
     /// Cleans a URL.
     /// </summary>
-    [Obsolete("Use Nalarium.UrlCleaner")]
+    [Obsolete("Use Nalarium.Url")]
     public static class UrlCleaner
     {
         //- @Merge -//
