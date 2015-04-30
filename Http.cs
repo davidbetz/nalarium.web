@@ -466,6 +466,38 @@ namespace Nalarium.Web
             }
         }
 
+        //- @QueryString -//
+        /// <summary>
+        /// Gets the raw query string.
+        /// </summary>
+        public static Map QueryStringMap
+        {
+            get
+            {
+                var map = new Map();
+                var partArray = HttpData.GetServerVariableItem(ServerVariable.QUERY_STRING).Split('&');
+                if (partArray.Length > 0)
+                {
+                    foreach (var item in partArray)
+                    {
+                        if (item.Contains("="))
+                        {
+                            var partArray2 = item.Split('=');
+                            if (partArray2.Length == 2)
+                            {
+                                map.Add(partArray2[0], partArray2[1]);
+                            }
+                        }
+                        else
+                        {
+                            map.Add(item, string.Empty);
+                        }
+                    }
+                }
+                return map;
+            }
+        }
+
         //- @UserAgent -//
         /// <summary>
         /// Gets the user agent.
